@@ -77,12 +77,12 @@ jobs:
         run: |
           git clone -q --depth 1 -b llvmorg-14.0.0 --recursive https://github.com/llvm/llvm-project
           pushd llvm-project
-          if [[ '${{ matrix.os }}' == ubuntu-* ]]; then
-            # shrug
-            sed -i 's/if (LIBCXX_HAS_ATOMIC_LIB)/if (NO)/' libcxx/CMakeLists.txt
-            sed -i 's/if (NOT HAVE_CXX_ATOMICS_WITH_LIB)/if (NO)/' llvm/cmake/modules/CheckAtomic.cmake
-            sed -i 's/if (NOT HAVE_CXX_ATOMICS64_WITH_LIB)/if (NO)/' llvm/cmake/modules/CheckAtomic.cmake
-          fi
+          # if [[ '${{ matrix.os }}' == ubuntu-* ]]; then
+          #   # shrug
+          #   sed -i 's/if (LIBCXX_HAS_ATOMIC_LIB)/if (NO)/' libcxx/CMakeLists.txt
+          #   sed -i 's/if (NOT HAVE_CXX_ATOMICS_WITH_LIB)/if (NO)/' llvm/cmake/modules/CheckAtomic.cmake
+          #   sed -i 's/if (NOT HAVE_CXX_ATOMICS64_WITH_LIB)/if (NO)/' llvm/cmake/modules/CheckAtomic.cmake
+          # fi
           mkdir build
           cd build
           cmake -G Ninja ../llvm -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$PWD/../../lean-llvm -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DLLVM_USE_LINKER=lld\
