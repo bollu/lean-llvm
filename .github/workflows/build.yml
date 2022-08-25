@@ -81,6 +81,7 @@ jobs:
             # shrug
             sed -i 's/if (LIBCXX_HAS_ATOMIC_LIB)/if (NO)/' libcxx/CMakeLists.txt
             sed -i 's/if (NOT HAVE_CXX_ATOMICS_WITH_LIB)/if (NO)/' llvm/cmake/modules/CheckAtomic.cmake
+            sed -i 's/if (NOT HAVE_CXX_ATOMICS64_WITH_LIB)/if (NO)/' llvm/cmake/modules/CheckAtomic.cmake
           fi
           mkdir build
           cd build
