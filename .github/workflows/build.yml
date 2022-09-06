@@ -77,12 +77,6 @@ jobs:
         run: |
           git clone -q --depth 1 -b llvmorg-14.0.0 --recursive https://github.com/llvm/llvm-project
           pushd llvm-project
-          # if [[ '${{ matrix.os }}' == ubuntu-* ]]; then
-          #   # shrug
-          #   sed -i 's/if (LIBCXX_HAS_ATOMIC_LIB)/if (NO)/' libcxx/CMakeLists.txt
-          #   sed -i 's/if (NOT HAVE_CXX_ATOMICS_WITH_LIB)/if (NO)/' llvm/cmake/modules/CheckAtomic.cmake
-          #   sed -i 's/if (NOT HAVE_CXX_ATOMICS64_WITH_LIB)/if (NO)/' llvm/cmake/modules/CheckAtomic.cmake
-          # fi
           mkdir build
           cd build
           cmake -G Ninja ../llvm -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$PWD/../../lean-llvm -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DLLVM_USE_LINKER=lld\
@@ -94,6 +88,7 @@ jobs:
             -DCLANG_DEFAULT_CXX_STDLIB=libc++ -DCLANG_DEFAULT_LINKER=lld -DCLANG_DEFAULT_RTLIB=compiler-rt -DLIBCXX_USE_COMPILER_RT=ON -DLIBCXXABI_USE_COMPILER_RT=ON -DLIBCXXABI_USE_LLVM_UNWINDER=ON -DLIBUNWIND_USE_COMPILER_RT=ON -DCOMPILER_RT_USE_BUILTINS_LIBRARY=ON\
             -DCOMPILER_RT_BUILD_SANITIZERS=OFF\
             `# https://llvm.org/docs/BuildingADistribution.html`\
+            `# We build more than the toolchain to have access to llvm-config`\
             -DLLVM_INSTALL_TOOLCHAIN_ONLY=OFF\
             `# hide libc++ symbols in libleanshared`\
             -DLIBCXX_HERMETIC_STATIC_LIBRARY=ON -DLIBCXXABI_HERMETIC_STATIC_LIBRARY=ON\
