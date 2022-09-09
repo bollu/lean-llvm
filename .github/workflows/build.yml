@@ -1,5 +1,5 @@
 name: Build LLVM
-# jiggle CI v2
+# jiggle CI after msys2 downgrade.
 
 on:
   push:
