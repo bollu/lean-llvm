@@ -64,15 +64,16 @@ jobs:
         uses: msys2/setup-msys2@v2
         with:
           msystem: clang64
+          # install: mingw-w64-clang-x86_64-clang mingw-w64-clang-x86_64-ccache git mingw-w64-clang-x86_64-cmake make tar zstd
           install: mingw-w64-clang-x86_64-clang mingw-w64-clang-x86_64-ccache git mingw-w64-clang-x86_64-cmake make tar zstd
-      - name: Cache
-        uses: actions/cache@v2
-        with:
-          path: .ccache
-          key: ${{ matrix.name }}-build-${{ github.sha }}
-          # fall back to (latest) previous cache
-          restore-keys: |
-            ${{ matrix.name }}-build
+      # - name: Cache
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: .ccache
+      #     key: ${{ matrix.name }}-build-${{ github.sha }}
+      #     # fall back to (latest) previous cache
+      #     restore-keys: |
+      #       ${{ matrix.name }}-build
       - name: Build
         run: |
           git clone -q --depth 1 -b llvmorg-14.0.0 --recursive https://github.com/llvm/llvm-project
@@ -86,7 +87,7 @@ jobs:
           mkdir build
           cd build
           cmake -G Ninja ../llvm -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$PWD/../../lean-llvm -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DLLVM_USE_LINKER=lld\
-            -DLLVM_ENABLE_PROJECTS="clang;lld;llvm;compiler-rt;libcxx;libcxxabi;libunwind" -DLLVM_LINK_LLVM_DYLIB=ON -DLLVM_CCACHE_BUILD=ON\
+            -DLLVM_ENABLE_PROJECTS="clang;lld;llvm;compiler-rt;libcxx;libcxxabi;libunwind" -DLLVM_LINK_LLVM_DYLIB=ON -DLLVM_CCACHE_BUILD=OFF\
             -DLLVM_ENABLE_LIBXML2=OFF -DLLVM_ENABLE_ZLIB=OFF -DLLVM_ENABLE_TERMINFO=OFF -DLLVM_ENABLE_LIBCXX=ON -DLLVM_ENABLE_FFI=OFF\
             `# https://boxbase.org/entries/2018/jun/11/minimal-llvm-build/`\
             -DLLVM_TARGETS_TO_BUILD='X86'\
@@ -105,8 +106,8 @@ jobs:
           tar cf lean-llvm-${{ matrix.name }}.tar.zst --use-compress-program="zstd -19" lean-llvm/
       - name: Sanity test
         run: lean-llvm/bin/clang -v
-      - name: CCache stats
-        run: ccache -s
+      # - name: CCache stats
+      #   run: ccache -s
       - uses: actions/upload-artifact@v2
         with:
           name: lean-llvm-${{ matrix.name }}
